@@ -1,15 +1,26 @@
 cmake_minimum_required(VERSION 3.16)
 
 # ---------------------------------------------------------------------------
-# Use hipcc as the C++ compiler for the whole project.
-# Set this BEFORE project() so CMake picks up the right compiler.
-# If ROCM_PATH is not set, default to /opt/rocm.
+# hipcc compiler setup.
+# Detect from ROCM_PATH env var, /opt/rocm, or system PATH in that order.
+# Must be set BEFORE the project() call.
 # ---------------------------------------------------------------------------
-if(NOT DEFINED ENV{ROCM_PATH})
-    set(ENV{ROCM_PATH} "/opt/rocm")
+if(DEFINED ENV{ROCM_PATH})
+    set(_HIPCC "$ENV{ROCM_PATH}/bin/hipcc")
+elseif(EXISTS "/opt/rocm/bin/hipcc")
+    set(_HIPCC "/opt/rocm/bin/hipcc")
+else()
+    find_program(_HIPCC hipcc DOC "AMD HIP compiler")
 endif()
 
-set(CMAKE_CXX_COMPILER "$ENV{ROCM_PATH}/bin/hipcc" CACHE FILEPATH "HIP C++ compiler")
+if(NOT _HIPCC OR NOT EXISTS "${_HIPCC}")
+    message(FATAL_ERROR
+        "hipcc not found. Install it with:\n"
+        "  sudo apt-get update && sudo apt-get install -y hipcc\n"
+        "Or set the ROCM_PATH environment variable to your ROCm install root.")
+endif()
+
+set(CMAKE_CXX_COMPILER "${_HIPCC}" CACHE FILEPATH "HIP C++ compiler" FORCE)
 
 project(llama_inference_hip LANGUAGES CXX)
 
