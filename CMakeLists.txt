@@ -46,6 +46,13 @@ add_executable(llama_hip
     src/main.cpp
 )
 
+# Hardcode Ubuntu 22.04 gcc-11 paths so hipcc clang doesn't get lost
+target_include_directories(llama_hip SYSTEM PRIVATE 
+    /usr/include/c++/11 
+    /usr/include/x86_64-linux-gnu/c++/11
+)
+target_link_directories(llama_hip PRIVATE /usr/lib/gcc/x86_64-linux-gnu/11)
+
 target_include_directories(llama_hip PRIVATE include)
 target_link_libraries(llama_hip m)
 
