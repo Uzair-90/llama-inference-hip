@@ -25,10 +25,9 @@ set(CMAKE_CXX_COMPILER "${_HIPCC}" CACHE FILEPATH "HIP C++ compiler" FORCE)
 project(llama_inference_hip LANGUAGES CXX)
 
 if(NOT DEFINED AMDGPU_TARGETS)
-    # gfx906 = Vega20 (MI50/MI60), gfx900 = Vega10 (Fiji/Vega)
-    # gem5's VEGA_X86 models gfx801 (Fiji) by default - keep gfx900 for safety
-    set(AMDGPU_TARGETS "gfx900;gfx906" CACHE STRING
-        "AMD GPU ISA targets (use gfx801 for gem5 VEGA_X86, gfx90a for MI200)")
+    # gfx942 = AMD Instinct MI300/MI300X.
+    set(AMDGPU_TARGETS "gfx942" CACHE STRING
+        "AMD GPU ISA targets (default: gfx942 for MI300/MI300X)")
 endif()
 
 set(CMAKE_CXX_STANDARD 17)

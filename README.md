@@ -63,7 +63,7 @@ wget https://github.com/karpathy/llama2.c/raw/master/tokenizer.bin -P models/
 
 ```bash
 mkdir build && cd build
-cmake .. -DAMDGPU_TARGETS="gfx900;gfx906"
+cmake .. -DAMDGPU_TARGETS="gfx942"
 make -j$(nproc)
 ```
 
